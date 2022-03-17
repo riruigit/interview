@@ -34,3 +34,31 @@ tail -n 20 xxx.log	tail -f xxx.log   前者是显示后面的20行，后者是�
 
 ps -ef | grep xxx  kill -9 xxxx
 
+### 查看所有组和用户
+
+Linux 上都是文件。组文件对应  /etc/group   用户对应 /etc/passwd
+
+### 修改文件权限和归属用户
+
+这两者的命令并不相同，chmod 是修改文件的权限，执行 ll 指令的时候可以看出，前面那部分（-rw-r--r--）就是权限，后面是文件归属的用户以及组。
+
+如果是修改执行权限这些，chmod +777 xxxx
+
+这里用数字就好了，4 2 1 对应下来读写执行。
+
+如果修改文件的归属组和用户，就需要 chown ,其中 -r 是递归执行。
+
+chown -R root:root  /tmp/sco
+
+### 查看网络端口占用情况
+
+netstat -ntlp | grep 2240
+
+grep 可以跟进程名字，也可以加端口号。
+
+### 查看进程
+
+ps -ef | grep xxx
+
+ps -aux
+
