@@ -155,7 +155,7 @@ create table if not exists student3
 as select id, name from student;
 ```
 
-## 导出数据
+# 导出数据
 
 这里就没必要整的花里胡哨了。直接使用 hive shell 模式就好了。
 
@@ -163,5 +163,5 @@ as select id, name from student;
 hive -e 'xxxx' > xxx.txt
 ```
 
-
+# 查询语句
 
