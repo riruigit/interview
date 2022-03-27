@@ -40,6 +40,10 @@ CASE WHEN THEN ELSE END AS XX。老熟悉了不介绍了
 
 跟上面一样，但是不会去重。
 
+### coalesce
+
+返回第一个不为null的值，如果都为null，则返回null
+
 ## 行转列
 
 
@@ -93,13 +97,152 @@ explode(split(category,",")) movie_info_tmp AS category_name;
 
 看需求：是否要跟源表的字段做关联，如果要关联，就需要这个写法了。
 
+## 时间相关函数
+
+- current_timestamp
+
+- from_unixtime
+- from_utc_timestamp
+- to_unix_timestamp
+- to_utc_timestamp
+- unix_timestamp
+
+### current_timestamp
+
+返回当前时间。格式是时间类型，准确到秒。
+
+```sql
+select current_timestamp;
+#  2022-03-27 04:10:01.382
+```
+
+### from_unixtime
+
+把时间戳类型的时间转变成时间类型的时间，但是与北京时间缺了8小时。
+
+其中它可以指点输出的格式。
+
+```sql
+SELECT from_unixtime(1648323079, 'yyyy-MM-dd HH:mm:ss');
+#   2022-03-26 19:31:19
+```
+
+### from_utc_timestamp
+
+上面这个转出来的时间是慢了8小时的，这一个函数就是为了解决这个问题的。
+
+参数必须要求是 时间类型的时间，所以需要转一下。后者是指定时区。
+
+GMT+8  == PRC 。注意大写
+
+```sql
+select from_utc_timestamp(from_unixtime(1648323079),'GMT+8');
+#    2022-03-27 03:31:19
+```
+
+### to_unix_timestamp
+
+把时间转成时间戳的形式，但是这个时间戳也是有8小时时差的问题的。
+
+```sql
+select to_unix_timestamp('2022-03-27 03:31:19');
+#   1648351879   ----》   2022-03-27 11:31:19
+```
+
+转成时间戳的类型，但是再把这个时间戳转回到时间类型，他就会多8小时了。
+
+### to_utc_timestamp
+
+返回当前正确的北京时间。
+
+```sql
+select to_utc_timestamp(current_timestamp,'RPC');
+#    2022-03-27 04:11:18.321
+```
+
+### unix_timestamp
+
+返回时间戳。
+
+```sql
+select unix_timestamp();
+#    1648325494
+# 提示被抛弃了，使用 current_timestamp 代替
+```
+
+
+
 ## 时间戳
 
-
+unix_timestamp 和 to_unix_timestamp 都是返回时间戳类型的函数。一个是生成，一个是转成。
 
 ## 正常时间
 
-
+除了上面的这两个，其他的都是了。。不想打了
 
 ## 时间函数
+
+### to_date：抽取日期部分
+
+select to_date('2020-10-28 12:12:12');
+
+### year：获取年
+
+select year('2020-10-28 12:12:12');
+
+### month：获取月
+
+select month('2020-10-28 12:12:12');
+
+### day：获取日
+
+select day('2020-10-28 12:12:12');
+
+### hour：获取时
+
+select hour('2020-10-28 12:12:12');
+
+### minute：获取分
+
+select minute('2020-10-28 12:12:12');
+
+### second：获取秒
+
+select second('2020-10-28 12:12:12');
+
+### weekofyear：当前时间是一年中的第几周
+
+select weekofyear('2020-10-28 12:12:12');
+
+### dayofmonth：当前时间是一个月中的第几天
+
+select dayofmonth('2020-10-28 12:12:12');
+
+### months_between： 两个日期间的月份
+
+select months_between('2020-04-01','2020-10-28');
+
+### add_months：日期加减月
+
+select add_months('2020-10-28',-3);
+
+### datediff：两个日期相差的天数
+
+select datediff('2020-11-04','2020-10-28');
+
+### date_add：日期加天数
+
+select date_add('2020-10-28',4);
+
+### date_sub：日期减天数
+
+select date_sub('2020-10-28',-4);
+
+### last_day：日期的当月的最后一天
+
+select last_day('2020-02-30');
+
+### date_format(): 格式化日期
+
+select date_format('2020-10-28 12:12:12','yyyy/MM/dd HH:mm:ss');
 
