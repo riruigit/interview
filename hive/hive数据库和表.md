@@ -163,5 +163,47 @@ as select id, name from student;
 hive -e 'xxxx' > xxx.txt
 ```
 
-# 查询语句
+# 创建表
 
+```sql
+CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name
+[(col_name data_type [COMMENT col_comment], ...)]
+[COMMENT table_comment]
+[PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)]
+[CLUSTERED BY (col_name, col_name, ...)
+[SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS]
+[ROW FORMAT row_format]
+[STORED AS file_format]
+[LOCATION hdfs_path]
+[TBLPROPERTIES (property_name=property_value, ...)]
+[AS select_statement]
+```
+
+EXTERNAL：如果是外部表，需要加上。内部表（也叫内部表）不加，
+
+COMMENT：表示字段或者表的注释。
+
+PARTITIONED BY：用来创建分区表。
+
+CLUSTERED BY：用来创建分桶表。
+
+第6行：跟分桶表有关。
+
+ROW FORMAT：定义行的格式。
+
+STORED AS：指定文件的格式。
+
+LOCATION：指定文件在hdfs上的路径。
+
+AS：把查询的结果放到表里。
+
+```sql
+create table if not exists ads_random_band(
+    title string
+)
+partitioned by (dt string)
+row format delimited fields terminated by '\t'
+lines terminated by  '\n'
+```
+
+常规的建表语句，使用  \t 做列的分隔符，使用 \n 做行的分隔符。 
