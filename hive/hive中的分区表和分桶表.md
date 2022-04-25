@@ -28,3 +28,11 @@ alter table dept_partition drop partition
 
 二级分区，其实就是多个 partition 条件。
 
+## 分桶表的概念
+
+将数据按照指定的字段进行分成多个桶中去，就是按照分桶的字段进行哈希划分到多个文件中去，分区是分文件夹，但是分桶是分文件。
+
+## 分桶表的数据加载
+
+分桶表的数据加载不能通过 hdfs dfs -put 文件，或者使用 load data 的形式，只能通过insert overwrite 进行加载，所以把文件加载到桶表之中，需要先创建普通表，然后通过 insert overwrite 的方式将普通表的数据通过查询的方式加载到桶表之中。
+

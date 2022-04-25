@@ -24,5 +24,5 @@ pause
 https://license-server.tmk.edu.hk
 ```
 
-在 License server 选项中填入上面的连接。要是出现错误，多试几次就可以了。
+在 **License server** 选项中填入上面的连接。要是出现错误，多试几次就可以了。
 
