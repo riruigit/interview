@@ -120,18 +120,26 @@ alter table student add columns  (id string);
 
 导入数据一共有五种方式。
 
-- 直接 load
-- 把查询的数据插入到表中
-- 创建表后直接加载数据
+- 直接 load，这种方式又分为本地和hdfs上的数据。
+- 把查询的数据插入到表中，也就是 insert into / overwrite table + select 选择。
+- 创建表后直接加载数据，也就是创建表语句 + as select 选择。
 - 创建表时通过  Location 指定加载数据路径
 -  Import 数据到指定 Hive 表中
+
+虽然方式很多，但是可以总结为三个方式。其中 insert overwrite 既可以导出表的数据，也可以导入数据。
+
+**通过 hive 使用 insert 的语句。**
+
+**通过 hdfs 的 put 的方式。**
+
+**通过 hive 的 load 的命令导入。**
 
 但是这里直演示前面三种操作。
 
 ### load数据
 
 ```sql
- load data [local] inpath '数据的 path' [overwrite] into table 
+load data [local] inpath '数据的 path' [overwrite] into table 
 student [partition (partcol1=val1,…)];
 ```
 
@@ -157,7 +165,19 @@ as select id, name from student;
 
 # 导出数据
 
-这里就没必要整的花里胡哨了。直接使用 hive shell 模式就好了。
+导出数据的方式其实有两种。一个是使用 hive 的语句实现，一个是 linux 中的重定向  >  。
+
+### 使用 hive 中的 insert 的指令
+
+其中，如果导出到 hdfs 上面，就是不加 local ，如果是本地的话，就加上 local。
+
+```sql
+insert overwrite local directory '/opt/module/export/student1'
+row format delimited fields terminated by ','
+select * from hive.m_student;
+```
+
+### 使用linux中的重定向符号
 
 ```sql
 hive -e 'xxxx' > xxx.txt
