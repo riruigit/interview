@@ -1,8 +1,8 @@
 # hive中的四个排序
 
-## order by
+## order by (全局排序)
 
-全局排序，只有一个 reducer。默认升序。
+全局排序，只有一个 reducer。默认升序。此处采用的排序办法是**归并排序**。
 
 这里注意一点，在严格模式中，order by 语句后面必须跟着一个 limit 的字句。
 
@@ -46,17 +46,34 @@ order by 2 desc
 
 降序排序  ====》  空值最后面
 
-## sort by
+## sort by （局部排序）
 
 对于大规模的数据集 order by 的效率非常低，在很多情况下，并不需要全局排序。此时可以使用 sort by。
 
-但是 sort by 为每个 reducer 生成一个排序文件，在每个reducer内部进行排序，对全局结果集来说不是排序的。一般场景下不单独使用。
+每个 reducer 生成一个排序文件，sort by 只保证每个 reducer 的输出有序，只能保证局部是有序的，对全局结果集来说不是排序的。**一般场景下不单独使用。**
 
-## distribute by
+关于分区的规则：
+
+1. 使用 sort by 时，通常会跟 distribute by字段一起连用，通过 distribute by 来指定分区规则。
+2. 当不指定分区规则时(只使用sort by )，则使用**默认的内部算法进行分区。**
+
+## distribute by （分区排序）
+
+distribute by 是用来指定分区规则的，如果单独使用 sort by。因为没有分区的规则，所以 sort by 会用内部的随机算法进行分区，但是如果有 distribute by ，会根据这个划分分区。如果还想要排序，那就结合 sort by 即可。
 
 distribute by 是用来控制 map 的输出，在 reduce 是如何划分的。一般情况下会跟 sort by 起来使用。而且sort by 要跟在 distribute by 一起使用。
 
-## cluster by
+关于分区的规则：
 
-Cluster By是 Distribute By 和 Sort By 的捷径。
+根据 key 的哈希值取模来划分的。相同的key值会划分到同一个reduce。
+
+## cluster by （簇排序）
+
+Cluster By是 Distribute By 和 Sort By 的结合体。
+
+当两者相同的时候，可以使用，但是有一点就是：不能指定排序的规则，只能做一个升序的。
+
+## 参考文档
+
+[Sort By、Distribute By 使用说明书_扛麻袋的少年的博客-CSDN博客](https://blog.csdn.net/lzb348110175/article/details/117321142)
 
